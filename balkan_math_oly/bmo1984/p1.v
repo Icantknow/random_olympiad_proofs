@@ -1046,7 +1046,6 @@ Proof.
         apply H1.
         split; destruct H0; assumption.
       * apply Nat.leb_nle in Hik.
-        Search (~ _ <= _ -> _).
         apply not_le in Hik.
         apply lt_le_S in Hik.
         destruct H0.
@@ -1072,9 +1071,11 @@ Proof.
   specialize (H0 b).
   assert (P b).
     { apply H3. split. assumption. constructor. }
+  destruct b.
+    { simpl in H5. inversion H5. assumption. }
   apply H0 in H7.
   assert (b <= 2*b) by apply le_n_2n.
-  assert (forall i : nat, 1 <= i <= 2 * b -> P i).
+  assert (forall i : nat, 1 <= i <= 2 * S b -> P i).
     { apply finite_descent_variant; assumption. }
   destruct (0 =? k0) eqn:Hk0.
   - apply Nat.eqb_eq in Hk0.
@@ -1092,6 +1093,8 @@ Proof.
     split.
     + apply Hk0.
     + apply H5.
+  - replace 1 with (1 + 0) by reflexivity.
+    apply plus_le_compat_l. apply Nat.le_0_l.
 Qed.
 
 Lemma half_lists : forall (A: Type) (n: nat) (l: list A),
